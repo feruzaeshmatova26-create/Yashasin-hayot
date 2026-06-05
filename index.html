@@ -638,7 +638,7 @@
     <div class="card-title"><span>✨</span> AI Kunlik Maslahat</div>
     <div class="ai-advice loading" id="aiAdvice">Maslahat yuklanmoqda</div>
     <div class="ai-footer">
-      <span class="ai-badge">Gemini AI</span>
+      <span class="ai-badge">Groq AI</span>
       <button class="btn-refresh-ai" id="refreshAi">↻ Yangi maslahat</button>
     </div>
   </div>
@@ -841,14 +841,21 @@ async function callGemini(prompt, systemPrompt = '') {
   const key = getApiKey();
   if (!key) throw new Error('API key yo\'q');
 
-  const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt;
+  const messages = [];
+  if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+  messages.push({ role: 'user', content: prompt });
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${key}`
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: fullPrompt }] }],
-      generationConfig: { maxOutputTokens: 600, temperature: 0.8 }
+      model: 'llama-3.3-70b-versatile',
+      messages: messages,
+      max_tokens: 600,
+      temperature: 0.8
     })
   });
 
@@ -858,7 +865,7 @@ async function callGemini(prompt, systemPrompt = '') {
   }
 
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  return data.choices?.[0]?.message?.content || '';
 }
 
 // ─── AI Maslahat ─────────────────────────────────────────
@@ -1166,4 +1173,3 @@ initChat();
 </script>
 </body>
 </html>
-
