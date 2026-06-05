@@ -54,7 +54,6 @@
 
   .container { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
 
-  /* Header */
   .header { text-align: center; margin-bottom: 32px; animation: fadeDown 0.6s ease both; }
   .header h1 {
     font-family: 'Playfair Display', serif;
@@ -79,7 +78,6 @@
     margin-top: 10px;
   }
 
-  /* Install banner */
   .install-banner {
     display: none;
     background: linear-gradient(135deg, #1a1f3a, #1e2540);
@@ -107,7 +105,6 @@
     white-space: nowrap;
   }
 
-  /* Notification banner */
   .notif-banner {
     display: none;
     background: linear-gradient(135deg, #1a2a1a, #1e301e);
@@ -134,7 +131,6 @@
     white-space: nowrap;
   }
 
-  /* Cards */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -162,7 +158,6 @@
   }
   .card-title span { font-size: 15px; }
 
-  /* Streak */
   .streak-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .streak-item {
     background: var(--surface2);
@@ -182,7 +177,6 @@
   .streak-item.today .num { color: var(--green2); }
   .streak-item.best .num { color: var(--accent); }
 
-  /* Buttons */
   .btn {
     border: none; border-radius: 10px; padding: 11px 18px;
     font-size: 14px; font-weight: 600; cursor: pointer;
@@ -200,7 +194,7 @@
   }
   .btn-urge:hover { background: linear-gradient(135deg,#1e4432,#234836); transform: translateY(-1px); }
 
-  /* AI Card */
+  /* AI Maslahat Card */
   .ai-card { border-color: rgba(163,113,247,0.2); background: linear-gradient(135deg, #161b22, #1a1428); }
   .ai-card .card-title { color: var(--ai); }
 
@@ -210,7 +204,6 @@
     color: var(--text);
     min-height: 60px;
   }
-
   .ai-advice.loading {
     color: var(--muted);
     font-style: italic;
@@ -218,7 +211,6 @@
     align-items: center;
     gap: 10px;
   }
-
   .ai-advice.loading::after {
     content: '';
     width: 16px; height: 16px;
@@ -228,14 +220,12 @@
     animation: spin 0.8s linear infinite;
     flex-shrink: 0;
   }
-
   .ai-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 14px;
   }
-
   .ai-badge {
     font-size: 11px;
     color: var(--ai);
@@ -246,7 +236,6 @@
     font-weight: 600;
     letter-spacing: 0.5px;
   }
-
   .btn-refresh-ai {
     background: transparent;
     color: var(--ai);
@@ -261,6 +250,180 @@
   }
   .btn-refresh-ai:hover { background: rgba(163,113,247,0.1); }
   .btn-refresh-ai:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── AI CHAT ── */
+  .chat-card {
+    border-color: rgba(163,113,247,0.25);
+    background: linear-gradient(135deg, #161b22, #1a1428);
+  }
+  .chat-card .card-title { color: var(--ai); }
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 340px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(163,113,247,0.3) transparent;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: rgba(163,113,247,0.3); border-radius: 4px; }
+
+  .chat-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 24px 0;
+    font-style: italic;
+  }
+
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: fadeUp 0.25s ease both;
+  }
+  .msg.user { align-items: flex-end; }
+  .msg.ai { align-items: flex-start; }
+
+  .msg-bubble {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .msg.user .msg-bubble {
+    background: linear-gradient(135deg, var(--ai2), var(--ai));
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai .msg-bubble {
+    background: var(--surface2);
+    border: 1px solid rgba(163,113,247,0.15);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+  }
+  .msg.ai .msg-bubble.typing {
+    color: var(--muted);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .msg.ai .msg-bubble.typing::after {
+    content: '';
+    width: 14px; height: 14px;
+    border: 2px solid rgba(163,113,247,0.3);
+    border-top-color: var(--ai);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid rgba(163,113,247,0.2);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    resize: none;
+    min-height: 44px;
+    max-height: 120px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+  .chat-input:focus { border-color: var(--ai); }
+  .chat-input::placeholder { color: var(--muted); }
+
+  .btn-send {
+    background: linear-gradient(135deg, var(--ai2), var(--ai));
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 18px;
+  }
+  .btn-send:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .suggestion-chip {
+    background: rgba(163,113,247,0.08);
+    border: 1px solid rgba(163,113,247,0.2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--ai);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .suggestion-chip:hover { background: rgba(163,113,247,0.18); border-color: var(--ai); }
+
+  /* API Key setup */
+  .api-setup {
+    text-align: center;
+    padding: 16px 0;
+  }
+  .api-setup p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .api-key-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(163,113,247,0.2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    outline: none;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .api-key-input:focus { border-color: var(--ai); }
+  .btn-save-key {
+    background: linear-gradient(135deg, var(--ai2), var(--ai));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    transition: opacity 0.2s;
+  }
+  .btn-save-key:hover { opacity: 0.85; }
 
   /* Tasks */
   .task-item {
@@ -284,7 +447,6 @@
   .task-item.done .task-check svg { display: block; }
 
   .task-time { font-size: 12px; color: var(--gold); font-weight: 600; min-width: 40px; }
-  .task-item.upcoming .task-time { color: var(--gold); }
   .task-name { flex: 1; font-size: 14px; }
   .task-item.done .task-name { text-decoration: line-through; }
 
@@ -298,7 +460,6 @@
     white-space: nowrap;
   }
 
-  /* Task Management */
   .task-mgmt-header {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
   }
@@ -319,15 +480,14 @@
   }
   .task-add-panel.show { display: flex; }
 
-  .task-add-panel input, .task-add-panel select {
+  .task-add-panel input {
     background: var(--surface2); border: 1px solid var(--border);
     border-radius: 8px; color: var(--text);
     font-family: 'DM Sans', sans-serif; font-size: 13px;
     padding: 9px 12px; outline: none; width: 100%;
     transition: border-color 0.2s;
   }
-  .task-add-panel input:focus, .task-add-panel select:focus { border-color: var(--green2); }
-  .task-add-panel select option { background: #1c2333; }
+  .task-add-panel input:focus { border-color: var(--green2); }
 
   .task-add-row { display: flex; gap: 8px; }
   .task-add-row input[type="time"] { flex: 1; }
@@ -345,7 +505,6 @@
     font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
   }
 
-  /* Task item actions */
   .task-item { position: relative; }
   .task-item-actions {
     display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
@@ -362,7 +521,6 @@
   .task-action-btn.del:hover { color: var(--red2); border-color: var(--red2); background: rgba(248,81,73,0.08); }
   .task-action-btn.edit:hover { color: var(--gold); border-color: var(--gold); background: rgba(240,192,64,0.08); }
 
-  /* Edit modal */
   .task-modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.75); z-index: 200;
@@ -395,14 +553,12 @@
     font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif;
   }
 
-  /* Progress */
   .progress-wrap { margin-top: 14px; }
   .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
   .progress-pct { font-weight: 600; color: var(--green2); }
   .progress-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
   .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green2)); border-radius: 4px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
 
-  /* Urge */
   .urge-panel {
     display: none; margin-top: 12px;
     background: rgba(46,160,67,0.06); border: 1px solid rgba(63,185,80,0.2);
@@ -414,12 +570,10 @@
   .urge-step:last-child { border: none; padding-bottom: 0; }
   .urge-step .num { color: var(--green2); font-weight: 700; min-width: 18px; }
 
-  /* Footer */
   .footer { text-align: center; margin-top: 16px; }
   .footer a { color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: none; }
   .footer a:hover { color: var(--red2); }
 
-  /* Celebration */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99; display: none; }
   .overlay.show { display: block; }
   .celebration {
@@ -434,7 +588,6 @@
   .celebration p { color: var(--muted); font-size: 14px; margin-bottom: 18px; line-height: 1.5; }
   .btn-close-cel { background: var(--gold); color: #111; border: none; border-radius: 10px; padding: 10px 28px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
-  /* Animations */
   @keyframes fadeDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -444,28 +597,19 @@
 <body>
 <div class="container">
 
-  <!-- Header -->
   <div class="header">
     <h1>🌱 Yangi Hayot</h1>
     <p>Har bir toza kun — bu g'alaba</p>
     <div class="date-badge" id="dateBadge"></div>
   </div>
 
-  <!-- Install Banner -->
   <div class="install-banner" id="installBanner">
-    <span>
-      📱 Ilovani telefonga o'rnating
-      <small>Xabarnomalar ishlashi uchun kerak</small>
-    </span>
+    <span>📱 Ilovani telefonga o'rnating<small>Xabarnomalar ishlashi uchun kerak</small></span>
     <button class="btn-install" id="installBtn">O'rnatish</button>
   </div>
 
-  <!-- Notification Banner -->
   <div class="notif-banner" id="notifBanner">
-    <span>
-      🔔 Xabarnomalarni yoqing
-      <small>Vazifa vaqti kelganda eslatadi</small>
-    </span>
+    <span>🔔 Xabarnomalarni yoqing<small>Vazifa vaqti kelganda eslatadi</small></span>
     <button class="btn-notif" id="notifBtn">Yoqish</button>
   </div>
 
@@ -489,13 +633,42 @@
     <button class="btn btn-relapse" id="relapseBtn">⚠️ Bugun yiqildim (qaytadan boshlash)</button>
   </div>
 
-  <!-- AI Maslahat -->
+  <!-- AI Kunlik Maslahat -->
   <div class="card ai-card">
     <div class="card-title"><span>✨</span> AI Kunlik Maslahat</div>
     <div class="ai-advice loading" id="aiAdvice">Maslahat yuklanmoqda</div>
     <div class="ai-footer">
-      <span class="ai-badge">Claude AI</span>
+      <span class="ai-badge">Gemini AI</span>
       <button class="btn-refresh-ai" id="refreshAi">↻ Yangi maslahat</button>
+    </div>
+  </div>
+
+  <!-- AI Chat -->
+  <div class="card chat-card">
+    <div class="card-title"><span>💬</span> AI Sog'liq Yordamchisi</div>
+
+    <div id="chatSetup" style="display:none;">
+      <div class="api-setup">
+        <p>Gemini API kalitingizni kiriting.<br>Bu faqat sizning qurilmangizda saqlanadi.</p>
+        <input type="password" class="api-key-input" id="apiKeyInput" placeholder="AIza... (Gemini API key)">
+        <button class="btn-save-key" id="saveApiKey">✓ Saqlash va boshlash</button>
+      </div>
+    </div>
+
+    <div id="chatUI" style="display:none;">
+      <div class="chat-suggestions" id="chatSuggestions">
+        <button class="suggestion-chip" onclick="sendSuggestion('Bugun nima yesam bo\'ladi?')">🥗 Ovqat maslahati</button>
+        <button class="suggestion-chip" onclick="sendSuggestion('Uyda qilsa bo\'ladigan mashqlar?')">💪 Mashqlar</button>
+        <button class="suggestion-chip" onclick="sendSuggestion('Yaxshi uxlash uchun maslahat ber')">😴 Uyqu rejimi</button>
+        <button class="suggestion-chip" onclick="sendSuggestion('Bugun ruhiy holatim yaxshi emas')">🧠 Ruhiy yordam</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-empty">Savol bering — AI sog'liq bo'yicha yordam beradi 🌿</div>
+      </div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Sog'liq haqida savol bering..." rows="1"></textarea>
+        <button class="btn-send" id="sendBtn">➤</button>
+      </div>
     </div>
   </div>
 
@@ -505,8 +678,6 @@
       <div class="card-title" style="margin-bottom:0;"><span>📅</span> Bugungi tartib</div>
       <button class="btn-add-task" id="toggleAddTask">＋ Qo'shish</button>
     </div>
-
-    <!-- Add task panel -->
     <div class="task-add-panel" id="addTaskPanel">
       <div class="task-add-row">
         <input type="time" id="newTaskTime">
@@ -517,7 +688,6 @@
         <button class="btn-save-task" id="saveAddTask">✓ Saqlash</button>
       </div>
     </div>
-
     <div id="taskList"></div>
     <div class="progress-wrap">
       <div class="progress-header">
@@ -564,7 +734,6 @@
   </div>
 </div>
 
-<!-- Celebration -->
 <div class="overlay" id="overlay"></div>
 <div class="celebration" id="celebration">
   <div class="big">🏆</div>
@@ -574,19 +743,6 @@
 </div>
 
 <script>
-// ─── Data ───────────────────────────────────────────────
-const defaultTasks = [
-  { t:"06:00", x:"Erta uyg'onish va ibodat" },
-  { t:"06:30", x:"Sport / mashqlar (sovuq dush)" },
-  { t:"07:30", x:"Nonushta va kunni rejalashtirish" },
-  { t:"08:00", x:"Ish / o'qish (asosiy mashg'ulot)" },
-  { t:"13:00", x:"Tushlik va qisqa dam" },
-  { t:"14:00", x:"Foydali ish / loyiha" },
-  { t:"18:00", x:"Sport yoki yurish (tashqarida)" },
-  { t:"20:00", x:"Kitob o'qish / hobbi" },
-  { t:"22:00", x:"Telefonsiz vaqt, erta uxlash" }
-];
-
 // ─── Storage ─────────────────────────────────────────────
 const store = {
   get: (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch { return d; } },
@@ -609,17 +765,13 @@ window.addEventListener('beforeinstallprompt', e => {
   deferredPrompt = e;
   document.getElementById('installBanner').classList.add('show');
 });
-
 document.getElementById('installBtn').addEventListener('click', async () => {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  if (outcome === 'accepted') {
-    document.getElementById('installBanner').classList.remove('show');
-  }
+  if (outcome === 'accepted') document.getElementById('installBanner').classList.remove('show');
   deferredPrompt = null;
 });
-
 window.addEventListener('appinstalled', () => {
   document.getElementById('installBanner').classList.remove('show');
 });
@@ -638,63 +790,33 @@ function checkNotifPermission() {
     scheduleNotifications();
   }
 }
-
 document.getElementById('notifBtn').addEventListener('click', async () => {
   const perm = await Notification.requestPermission();
   document.getElementById('notifBanner').classList.remove('show');
   if (perm === 'granted') {
     scheduleNotifications();
-    showLocalNotif('Yangi Hayot 🌱', 'Xabarnomalar yoqildi! Har bir vazifa oldidan eslatiladi.');
+    showLocalNotif('Yangi Hayot 🌱', 'Xabarnomalar yoqildi!');
   }
 });
-
 function scheduleNotifications() {
-  const tasks = store.get('tasks_' + today(), null) ||
-    defaultTasks.map(x => ({ ...x, done: false }));
-
+  const tasks = store.get('tasks_' + today(), null) || defaultTasks.map(x => ({ ...x, done: false }));
   const now = new Date();
-
   tasks.forEach(task => {
     if (task.done) return;
     const [h, m] = task.t.split(':').map(Number);
-    const taskTime = new Date();
-    taskTime.setHours(h, m, 0, 0);
-
-    // 10 minutes before
+    const taskTime = new Date(); taskTime.setHours(h, m, 0, 0);
     const warnTime = new Date(taskTime.getTime() - 10 * 60 * 1000);
     const warnDiff = warnTime.getTime() - now.getTime();
-    if (warnDiff > 0) {
-      setTimeout(() => {
-        if (Notification.permission === 'granted') {
-          showLocalNotif('⏰ 10 daqiqa qoldi', `${task.t} — ${task.x}`);
-        }
-      }, warnDiff);
-    }
-
-    // At task time
+    if (warnDiff > 0) setTimeout(() => showLocalNotif('⏰ 10 daqiqa qoldi', `${task.t} — ${task.x}`), warnDiff);
     const diff = taskTime.getTime() - now.getTime();
-    if (diff > 0) {
-      setTimeout(() => {
-        if (Notification.permission === 'granted') {
-          showLocalNotif('🌱 Vaqt keldi!', `${task.t} — ${task.x}`);
-        }
-      }, diff);
-    }
+    if (diff > 0) setTimeout(() => showLocalNotif('🌱 Vaqt keldi!', `${task.t} — ${task.x}`), diff);
   });
 }
-
 function showLocalNotif(title, body) {
   if (Notification.permission !== 'granted') return;
   try {
     if (navigator.serviceWorker.controller) {
-      navigator.serviceWorker.ready.then(reg => {
-        reg.showNotification(title, {
-          body,
-          icon: 'icon-192.png',
-          badge: 'icon-192.png',
-          vibrate: [200, 100, 200]
-        });
-      });
+      navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'icon-192.png', vibrate: [200,100,200] }));
     } else {
       new Notification(title, { body, icon: 'icon-192.png' });
     }
@@ -712,6 +834,33 @@ function renderStreak() {
   document.getElementById('bestNum').textContent = best;
 }
 
+// ─── Gemini API ───────────────────────────────────────────
+function getApiKey() { return store.get('geminiKey', null); }
+
+async function callGemini(prompt, systemPrompt = '') {
+  const key = getApiKey();
+  if (!key) throw new Error('API key yo\'q');
+
+  const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt;
+
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: fullPrompt }] }],
+      generationConfig: { maxOutputTokens: 600, temperature: 0.8 }
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'API xato');
+  }
+
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
 // ─── AI Maslahat ─────────────────────────────────────────
 async function loadAiAdvice(forceNew = false) {
   const cacheKey = 'aiAdvice_' + today();
@@ -723,38 +872,23 @@ async function loadAiAdvice(forceNew = false) {
     return;
   }
 
+  if (!getApiKey()) {
+    document.getElementById('aiAdvice').className = 'ai-advice';
+    document.getElementById('aiAdvice').textContent = "Bugun ham kuchli bo'l! Har bir toza kun seni yangi odamga aylantiradi. Alloh sabr berganlarni sevadi.";
+    return;
+  }
+
   const el = document.getElementById('aiAdvice');
   el.className = 'ai-advice loading';
   el.textContent = 'Maslahat yuklanmoqda';
   document.getElementById('refreshAi').disabled = true;
 
-  const startDate = store.get('startDate', today());
-  const streak = Math.floor((new Date(today()) - new Date(startDate)) / 86400000);
+  const streak = Math.floor((new Date(today()) - new Date(store.get('startDate', today()))) / 86400000);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `Sen "Yangi Hayot" ilovasining AI yordamchisisan. Foydalanuvchi yomon odatlardan (masalan, pornografiya yoki noto'g'ri istaklar) xalos bo'lishga harakat qilmoqda va bugungi kuni ${streak}-kun.
-
-Bugun uchun qisqa, samimiy va kuchli motivatsion maslahat ber. Maslahat:
-- O'zbek tilida bo'lsin
-- 2-3 jumladan iborat bo'lsin
-- Amaliy va real bo'lsin
-- Islomiy qadriyatlarga mos bo'lsin (ibodat, sabr, irodaga urg'u ber)
-- ${streak} kunlik streak ni tilga ol
-- Faqat maslаhatni yoz, boshqa hech narsa qo'shma`
-        }]
-      })
-    });
-
-    const data = await res.json();
-    const text = data.content?.[0]?.text || "Bugun ham kuchli bo'l! Har bir toza kun — bu o'zingga berayotgan eng katta sovg'ang.";
+    const text = await callGemini(
+      `Sen "Yangi Hayot" sog'liq ilovasining AI yordamchisisan. Foydalanuvchi sog'lom turmush tarzini boshlagan va bugungi kuni ${streak}-kun.\n\nBugun uchun qisqa, samimiy va kuchli motivatsion maslahat ber. Maslahat:\n- O'zbek tilida bo'lsin\n- 2-3 jumladan iborat bo'lsin\n- Amaliy va real bo'lsin\n- Islomiy qadriyatlarga mos bo'lsin\n- ${streak} kunlik yo'lni tilga ol\n- Faqat maslahatni yoz`
+    );
     store.set(cacheKey, text);
     el.className = 'ai-advice';
     el.textContent = text;
@@ -769,7 +903,115 @@ Bugun uchun qisqa, samimiy va kuchli motivatsion maslahat ber. Maslahat:
 
 document.getElementById('refreshAi').addEventListener('click', () => loadAiAdvice(true));
 
+// ─── AI CHAT ─────────────────────────────────────────────
+let chatHistory = [];
+
+function initChat() {
+  const key = getApiKey();
+  if (!key) {
+    document.getElementById('chatSetup').style.display = 'block';
+    document.getElementById('chatUI').style.display = 'none';
+  } else {
+    document.getElementById('chatSetup').style.display = 'none';
+    document.getElementById('chatUI').style.display = 'block';
+  }
+}
+
+document.getElementById('saveApiKey').addEventListener('click', () => {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) { alert("API kalitni kiriting!"); return; }
+  store.set('geminiKey', key);
+  initChat();
+  loadAiAdvice(true);
+});
+
+function appendMsg(role, text, isTyping = false) {
+  const box = document.getElementById('chatMessages');
+  // Remove empty state
+  const empty = box.querySelector('.chat-empty');
+  if (empty) empty.remove();
+
+  const msg = document.createElement('div');
+  msg.className = `msg ${role}`;
+  msg.innerHTML = `<div class="msg-bubble${isTyping ? ' typing' : ''}">${isTyping ? 'Yozmoqda' : escapeHtml(text)}</div>`;
+  box.appendChild(msg);
+  box.scrollTop = box.scrollHeight;
+  return msg;
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+async function sendMessage(userText) {
+  if (!userText.trim()) return;
+
+  const sendBtn = document.getElementById('sendBtn');
+  const chatInput = document.getElementById('chatInput');
+  sendBtn.disabled = true;
+  chatInput.disabled = true;
+
+  appendMsg('user', userText);
+  chatHistory.push({ role: 'user', text: userText });
+
+  const typingEl = appendMsg('ai', '', true);
+
+  const systemPrompt = `Sen "Yangi Hayot" ilovasining do'stona sog'liq yordamchisisan. Foydalanuvchiga sog'lom turmush tarzi, ovqatlanish, sport, uyqu va ruhiy salomatlik bo'yicha maslahat berasan. O'zbek tilida gaplash. Qisqa va amaliy javob ber (3-5 jumla). Islomiy qadriyatlarga hurmat bilan yondash.`;
+
+  const fullPrompt = chatHistory.slice(-6).map(m => `${m.role === 'user' ? 'Foydalanuvchi' : 'AI'}: ${m.text}`).join('\n');
+
+  try {
+    const reply = await callGemini(fullPrompt, systemPrompt);
+    typingEl.remove();
+    appendMsg('ai', reply);
+    chatHistory.push({ role: 'ai', text: reply });
+  } catch (err) {
+    typingEl.remove();
+    appendMsg('ai', `Xato yuz berdi: ${err.message}. API kalitni tekshiring.`);
+  }
+
+  sendBtn.disabled = false;
+  chatInput.disabled = false;
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+  chatInput.focus();
+}
+
+function sendSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage(text);
+  document.getElementById('chatSuggestions').style.display = 'none';
+}
+
+document.getElementById('sendBtn').addEventListener('click', () => {
+  sendMessage(document.getElementById('chatInput').value);
+});
+
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage(e.target.value);
+  }
+});
+
+document.getElementById('chatInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
 // ─── Tasks ────────────────────────────────────────────────
+const defaultTasks = [
+  { t:"06:00", x:"Erta uyg'onish va ibodat" },
+  { t:"06:30", x:"Sport / mashqlar (sovuq dush)" },
+  { t:"07:30", x:"Nonushta va kunni rejalashtirish" },
+  { t:"08:00", x:"Ish / o'qish (asosiy mashg'ulot)" },
+  { t:"13:00", x:"Tushlik va qisqa dam" },
+  { t:"14:00", x:"Foydali ish / loyiha" },
+  { t:"18:00", x:"Sport yoki yurish (tashqarida)" },
+  { t:"20:00", x:"Kitob o'qish / hobbi" },
+  { t:"22:00", x:"Telefonsiz vaqt, erta uxlash" }
+];
+
 let celebrated = false;
 let editingTaskIdx = null;
 
@@ -778,26 +1020,19 @@ function getTasks() {
   if (!saved) saved = defaultTasks.map(x => ({ ...x, done: false }));
   return saved;
 }
-
-function saveTasks(tasks) {
-  store.set('tasks_' + today(), tasks);
-}
+function saveTasks(tasks) { store.set('tasks_' + today(), tasks); }
 
 function renderTasks() {
   const saved = getTasks();
   const now = new Date();
   const box = document.getElementById('taskList');
   box.innerHTML = '';
-
-  // Sort by time
   saved.sort((a, b) => a.t.localeCompare(b.t));
-
   saved.forEach((task, i) => {
     const [h, m] = task.t.split(':').map(Number);
     const taskTime = new Date(); taskTime.setHours(h, m, 0, 0);
     const diff = taskTime.getTime() - now.getTime();
     const isUpcoming = !task.done && diff > 0 && diff < 30 * 60 * 1000;
-
     const el = document.createElement('div');
     el.className = 'task-item' + (task.done ? ' done' : '') + (isUpcoming ? ' upcoming' : '');
     el.innerHTML = `
@@ -812,24 +1047,17 @@ function renderTasks() {
       <div class="task-item-actions">
         <button class="task-action-btn edit" data-idx="${i}">✏️</button>
         <button class="task-action-btn del" data-idx="${i}">🗑</button>
-      </div>
-    `;
-
-    // Toggle done (only on main area, not buttons)
+      </div>`;
     el.addEventListener('click', (e) => {
       if (e.target.closest('.task-item-actions')) return;
       saved[i].done = !saved[i].done;
       saveTasks(saved);
       renderTasks();
     });
-
-    // Edit button
     el.querySelector('.edit').addEventListener('click', (e) => {
       e.stopPropagation();
       openEditModal(i, saved[i]);
     });
-
-    // Delete button
     el.querySelector('.del').addEventListener('click', (e) => {
       e.stopPropagation();
       if (confirm(`"${task.x}" vazifasini o'chirasizmi?`)) {
@@ -838,16 +1066,13 @@ function renderTasks() {
         renderTasks();
       }
     });
-
     box.appendChild(el);
   });
-
   const doneCount = saved.filter(t => t.done).length;
   const pct = saved.length ? Math.round(doneCount / saved.length * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressPct').textContent = pct + '%';
   document.getElementById('todayNum').textContent = pct;
-
   if (pct === 100 && saved.length > 0 && !celebrated) {
     celebrated = true;
     setTimeout(() => {
@@ -857,18 +1082,15 @@ function renderTasks() {
   }
 }
 
-// ─── Add Task ─────────────────────────────────────────────
 document.getElementById('toggleAddTask').addEventListener('click', () => {
   document.getElementById('addTaskPanel').classList.toggle('show');
   document.getElementById('newTaskName').focus();
 });
-
 document.getElementById('cancelAddTask').addEventListener('click', () => {
   document.getElementById('addTaskPanel').classList.remove('show');
   document.getElementById('newTaskTime').value = '';
   document.getElementById('newTaskName').value = '';
 });
-
 document.getElementById('saveAddTask').addEventListener('click', () => {
   const t = document.getElementById('newTaskTime').value;
   const x = document.getElementById('newTaskName').value.trim();
@@ -881,13 +1103,10 @@ document.getElementById('saveAddTask').addEventListener('click', () => {
   document.getElementById('newTaskTime').value = '';
   document.getElementById('newTaskName').value = '';
 });
-
-// Also allow Enter key
 document.getElementById('newTaskName').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('saveAddTask').click();
 });
 
-// ─── Edit Task Modal ───────────────────────────────────────
 function openEditModal(idx, task) {
   editingTaskIdx = idx;
   document.getElementById('editTaskTime').value = task.t;
@@ -895,19 +1114,13 @@ function openEditModal(idx, task) {
   document.getElementById('editTaskModal').classList.add('open');
   document.getElementById('editTaskName').focus();
 }
-
 document.getElementById('cancelEditTask').addEventListener('click', () => {
   document.getElementById('editTaskModal').classList.remove('open');
   editingTaskIdx = null;
 });
-
 document.getElementById('editTaskModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.classList.remove('open');
-    editingTaskIdx = null;
-  }
+  if (e.target === this) { this.classList.remove('open'); editingTaskIdx = null; }
 });
-
 document.getElementById('saveEditTask').addEventListener('click', () => {
   const t = document.getElementById('editTaskTime').value;
   const x = document.getElementById('editTaskName').value.trim();
@@ -922,27 +1135,21 @@ document.getElementById('saveEditTask').addEventListener('click', () => {
   document.getElementById('editTaskModal').classList.remove('open');
   editingTaskIdx = null;
 });
-
-// Update "upcoming" badges every minute
 setInterval(renderTasks, 60000);
 
-// ─── Events ───────────────────────────────────────────────
 document.getElementById('relapseBtn').addEventListener('click', () => {
   if (confirm("Streak qaytadan 0 dan boshlanadi. Tashvishlanma — yana qaytadan boshlaymiz! 💪")) {
     store.set('startDate', today());
     renderStreak();
   }
 });
-
 document.getElementById('urgeBtn').addEventListener('click', () => {
   document.getElementById('urgePanel').classList.toggle('show');
 });
-
 document.getElementById('closeCel').addEventListener('click', () => {
   document.getElementById('celebration').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
 });
-
 document.getElementById('resetAll').addEventListener('click', () => {
   if (confirm("Hamma ma'lumot o'chiriladi. Davom etamizmi?")) {
     localStorage.clear();
@@ -955,6 +1162,7 @@ renderStreak();
 renderTasks();
 loadAiAdvice();
 checkNotifPermission();
+initChat();
 </script>
 </body>
 </html>
