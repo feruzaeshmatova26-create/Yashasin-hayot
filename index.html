@@ -298,6 +298,63 @@
     white-space: nowrap;
   }
 
+  .task-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .btn-task-edit, .btn-task-del {
+    width: 28px; height: 28px; border-radius: 7px;
+    border: none; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 14px; transition: all 0.2s; background: transparent;
+  }
+  .btn-task-edit { color: var(--accent); }
+  .btn-task-edit:hover { background: rgba(88,166,255,0.12); }
+  .btn-task-del { color: var(--red2); }
+  .btn-task-del:hover { background: rgba(248,81,73,0.12); }
+
+  .btn-add-task {
+    width: 100%; margin-top: 10px;
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 10px; color: var(--muted);
+    padding: 10px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s; display: flex; align-items: center;
+    justify-content: center; gap: 6px;
+  }
+  .btn-add-task:hover { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.05); }
+
+  /* Modal */
+  .modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    background: rgba(0,0,0,0.7);
+  }
+  .modal.show { display: flex; }
+  .modal-box {
+    background: var(--surface2); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; padding: 24px; width: 100%; max-width: 360px;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 18px; }
+  .modal-input {
+    width: 100%; background: var(--surface); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; padding: 11px 14px; outline: none; margin-bottom: 10px;
+    transition: border-color 0.2s; box-sizing: border-box;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .btn-modal-save {
+    flex: 1; background: var(--accent); color: #0d1117;
+    border: none; border-radius: 10px; padding: 11px;
+    font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-modal-cancel {
+    flex: 1; background: transparent; color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 11px;
+    font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-modal-cancel:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
   /* Progress */
   .progress-wrap { margin-top: 14px; }
   .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
@@ -395,10 +452,23 @@
   <!-- AI Maslahat -->
   <div class="card ai-card">
     <div class="card-title"><span>✨</span> AI Kunlik Maslahat</div>
-    <div class="ai-advice loading" id="aiAdvice">Maslahat yuklanmoqda</div>
-    <div class="ai-footer">
-      <span class="ai-badge">Claude AI</span>
-      <button class="btn-refresh-ai" id="refreshAi">↻ Yangi maslahat</button>
+    <div id="aiKeySetup" style="display:none">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+        AI maslahat ishlashi uchun Gemini API keyingizni kiriting.<br>
+        <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--ai)">aistudio.google.com</a> dan olish mumkin.
+      </p>
+      <input class="modal-input" id="apiKeyInput" type="password" placeholder="API keyingizni kiriting..." style="margin-bottom:8px">
+      <button class="btn-modal-save" id="saveApiKey" style="width:100%;padding:11px;border-radius:10px">Saqlash va boshlash</button>
+    </div>
+    <div id="aiAdviceWrap">
+      <div class="ai-advice loading" id="aiAdvice">Maslahat yuklanmoqda</div>
+      <div class="ai-footer">
+        <span class="ai-badge">Gemini AI</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-refresh-ai" id="refreshAi">↻ Yangi</button>
+          <button class="btn-refresh-ai" id="changeApiKey" style="color:var(--muted)">🔑</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -406,6 +476,7 @@
   <div class="card">
     <div class="card-title"><span>📅</span> Bugungi tartib</div>
     <div id="taskList"></div>
+    <button class="btn-add-task" id="addTaskBtn">＋ Yangi vazifa qo'shish</button>
     <div class="progress-wrap">
       <div class="progress-header">
         <span>Kunlik maqsad</span>
@@ -413,6 +484,19 @@
       </div>
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Modal -->
+  <div class="modal" id="taskModal">
+    <div class="modal-box">
+      <h3 id="modalTitle">Vazifa qo'shish</h3>
+      <input class="modal-input" id="modalTime" type="time" placeholder="Vaqt">
+      <input class="modal-input" id="modalName" type="text" placeholder="Vazifa nomi (masalan: Ibodat)">
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="modalCancel">Bekor</button>
+        <button class="btn-modal-save" id="modalSave">Saqlash</button>
       </div>
     </div>
   </div>
@@ -585,8 +669,32 @@ function renderStreak() {
   document.getElementById('bestNum').textContent = best;
 }
 
-// ─── AI Maslahat ─────────────────────────────────────────
+// ─── AI Maslahat (Gemini) ─────────────────────────────────
+function getApiKey() { return store.get('geminiKey', ''); }
+
+function showAiSetup(show) {
+  document.getElementById('aiKeySetup').style.display = show ? 'block' : 'none';
+  document.getElementById('aiAdviceWrap').style.display = show ? 'none' : 'block';
+}
+
+document.getElementById('saveApiKey').addEventListener('click', () => {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) return;
+  store.set('geminiKey', key);
+  showAiSetup(false);
+  loadAiAdvice(true);
+});
+
+document.getElementById('changeApiKey').addEventListener('click', () => {
+  showAiSetup(true);
+  document.getElementById('apiKeyInput').value = '';
+});
+
 async function loadAiAdvice(forceNew = false) {
+  const key = getApiKey();
+  if (!key) { showAiSetup(true); return; }
+  showAiSetup(false);
+
   const cacheKey = 'aiAdvice_' + today();
   const cached = store.get(cacheKey, null);
 
@@ -604,35 +712,44 @@ async function loadAiAdvice(forceNew = false) {
   const startDate = store.get('startDate', today());
   const streak = Math.floor((new Date(today()) - new Date(startDate)) / 86400000);
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `Sen "Yangi Hayot" ilovasining AI yordamchisisan. Foydalanuvchi yomon odatlardan (masalan, pornografiya yoki noto'g'ri istaklar) xalos bo'lishga harakat qilmoqda va bugungi kuni ${streak}-kun.
+  const prompt = `Sen "Yangi Hayot" ilovasining AI yordamchisisan. Foydalanuvchi yomon odatlardan xalos bo'lishga harakat qilmoqda va bugun ${streak}-kun.
 
-Bugun uchun qisqa, samimiy va kuchli motivatsion maslahat ber. Maslahat:
-- O'zbek tilida bo'lsin
-- 2-3 jumladan iborat bo'lsin
-- Amaliy va real bo'lsin
-- Islomiy qadriyatlarga mos bo'lsin (ibodat, sabr, irodaga urg'u ber)
-- ${streak} kunlik streak ni tilga ol
-- Faqat maslаhatni yoz, boshqa hech narsa qo'shma`
-        }]
-      })
-    });
+Bugun uchun qisqa, samimiy va kuchli motivatsion maslahat ber:
+- O'zbek tilida
+- 2-3 jumladan iborat
+- Islomiy qadriyatlarga mos (sabr, ibodat, iroda)
+- ${streak} kunlik streakni tilga ol
+- Faqat maslahatni yoz, boshqa narsa qo'shma`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 200, temperature: 0.8 }
+        })
+      }
+    );
 
     const data = await res.json();
-    const text = data.content?.[0]?.text || "Bugun ham kuchli bo'l! Har bir toza kun — bu o'zingga berayotgan eng katta sovg'ang.";
+    if (data.error) {
+      // API key noto'g'ri
+      el.className = 'ai-advice';
+      el.textContent = '❌ API key noto\'g\'ri. 🔑 tugmasini bosib qayta kiriting.';
+      document.getElementById('refreshAi').disabled = false;
+      return;
+    }
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+      || "Bugun ham kuchli bo'l! Har bir toza kun seni yangi odamga aylantiradi.";
+
     store.set(cacheKey, text);
     el.className = 'ai-advice';
     el.textContent = text;
   } catch {
-    const fallback = "Bugun ham kuchli bo'l! Har bir toza kun seni yangi odamga aylantiradi. Alloh sabr berganlarni sevadi.";
+    const fallback = "Bugun ham kuchli bo'l! Alloh sabr berganlarni sevadi. Sen bu istakdan kuchliroqsan!";
     el.className = 'ai-advice';
     el.textContent = fallback;
   }
@@ -681,13 +798,45 @@ function renderTasks() {
       <span class="task-time">${task.t}</span>
       <span class="task-name">${task.x}</span>
       ${isUpcoming ? '<span class="task-notif-badge">⏰ Yaqin</span>' : ''}
+      <div class="task-actions">
+        <button class="btn-task-edit" data-i="${i}" title="Tahrirlash">✏️</button>
+        <button class="btn-task-del" data-i="${i}" title="O'chirish">🗑️</button>
+      </div>
     `;
-    el.addEventListener('click', () => {
+    // Check toggle — only on check/name, not buttons
+    el.querySelector('.task-check').addEventListener('click', e => {
+      e.stopPropagation();
       const done = getDoneToday();
       const idx = done.indexOf(i);
       if (idx === -1) done.push(i); else done.splice(idx, 1);
       store.set('done_' + today(), done);
       renderTasks();
+    });
+    el.querySelector('.task-name').addEventListener('click', e => {
+      e.stopPropagation();
+      const done = getDoneToday();
+      const idx = done.indexOf(i);
+      if (idx === -1) done.push(i); else done.splice(idx, 1);
+      store.set('done_' + today(), done);
+      renderTasks();
+    });
+    // Edit
+    el.querySelector('.btn-task-edit').addEventListener('click', e => {
+      e.stopPropagation();
+      openModal(i);
+    });
+    // Delete
+    el.querySelector('.btn-task-del').addEventListener('click', e => {
+      e.stopPropagation();
+      if (confirm(`"${task.x}" vazifasini o'chirasizmi?`)) {
+        const tasks = getMyTasks();
+        tasks.splice(i, 1);
+        store.set('myTasks', tasks);
+        // Fix done indexes
+        const done = getDoneToday().filter(d => d !== i).map(d => d > i ? d - 1 : d);
+        store.set('done_' + today(), done);
+        renderTasks();
+      }
     });
     box.appendChild(el);
   });
@@ -732,6 +881,52 @@ document.getElementById('resetAll').addEventListener('click', () => {
     localStorage.clear();
     location.reload();
   }
+});
+
+// ─── Task Modal ───────────────────────────────────────────
+let editIndex = -1;
+
+function openModal(index = -1) {
+  editIndex = index;
+  const tasks = getMyTasks();
+  document.getElementById('modalTitle').textContent = index === -1 ? 'Vazifa qo\'shish' : 'Vazifani tahrirlash';
+  document.getElementById('modalTime').value = index === -1 ? '' : tasks[index].t;
+  document.getElementById('modalName').value = index === -1 ? '' : tasks[index].x;
+  document.getElementById('taskModal').classList.add('show');
+  setTimeout(() => document.getElementById('modalName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('taskModal').classList.remove('show');
+  editIndex = -1;
+}
+
+document.getElementById('addTaskBtn').addEventListener('click', () => openModal());
+document.getElementById('modalCancel').addEventListener('click', closeModal);
+document.getElementById('taskModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('taskModal')) closeModal();
+});
+
+document.getElementById('modalSave').addEventListener('click', () => {
+  const time = document.getElementById('modalTime').value.trim();
+  const name = document.getElementById('modalName').value.trim();
+  if (!name) { document.getElementById('modalName').focus(); return; }
+
+  const tasks = getMyTasks();
+  const t = time || '00:00';
+
+  if (editIndex === -1) {
+    tasks.push({ t, x: name });
+    // Sort by time
+    tasks.sort((a, b) => a.t.localeCompare(b.t));
+  } else {
+    tasks[editIndex] = { t, x: name };
+    tasks.sort((a, b) => a.t.localeCompare(b.t));
+  }
+
+  store.set('myTasks', tasks);
+  closeModal();
+  renderTasks();
 });
 
 // ─── Init ─────────────────────────────────────────────────
